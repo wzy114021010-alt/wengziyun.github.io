@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>翁子云 | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+/* ── 色彩系統 ── */
+:root {
+  --bg:         #f0f2f5;
+  --bg2:        #e4e8ee;
+  --surface:    #ffffff;
+  --surface2:   #f7f8fa;
+  --border:     rgba(100,120,150,0.14);
+  --text:       #1a2232;
+  --text2:      #4a5568;
+  --text3:      #8896aa;
+  --accent:     #3a6ea8;
+  --accent2:    #2557a7;
+  --accent-lt:  #dde8f5;
+  --nav-bg:     rgba(240,242,245,0.72);
+  --hero-line:  rgba(58,110,168,0.18);
+}
+body.dark {
+  --bg:         #111620;
+  --bg2:        #181e2b;
+  --surface:    #1e2637;
+  --surface2:   #232d40;
+  --border:     rgba(100,140,200,0.14);
+  --text:       #e8edf5;
+  --text2:      #8faac8;
+  --text3:      #4d6480;
+  --accent:     #6ba3d6;
+  --accent2:    #4e8fc4;
+  --accent-lt:  rgba(107,163,214,0.15);
+  --nav-bg:     rgba(17,22,32,0.82);
+  --hero-line:  rgba(107,163,214,0.12);
+}
+
+/* ── Reset ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Noto Sans TC', sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:background .4s, color .4s;
+  overflow-x:hidden;
+}
+
+/* ── 背景細紋理 ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(58,110,168,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(58,110,168,0.05) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+/* ── Nav ── */
+nav {
+  position:fixed; top:0; width:100%; z-index:100;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 48px;
+  background:var(--nav-bg);
+  backdrop-filter:blur(18px);
+  border-bottom:.5px solid var(--border);
+  transition:background .4s, border-color .4s;
+}
+.nav-logo {
+  font-family:'DM Serif Display', serif;
+  font-size:20px;
+  color:var(--text);
+  letter-spacing:.02em;
+}
+.nav-links { display:flex; align-items:center; gap:8px; }
+.nav-links a {
+  text-decoration:none;
+  color:var(--text2);
+  font-size:14px;
+  font-weight:400;
+  padding:6px 14px;
+  border-radius:99px;
+  transition:color .2s, background .2s;
+}
+.nav-links a:hover, .nav-links a.active {
+  color:var(--accent);
+  background:var(--accent-lt);
+}
+.toggle-btn {
+  cursor:pointer; border:none;
+  width:38px; height:38px;
+  border-radius:50%;
+  background:var(--surface);
+  border:.5px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+  transition:background .3s, transform .2s;
+  margin-left:8px;
+}
+.toggle-btn:hover { transform:scale(1.08); }
+
+/* ── Hero ── */
+.hero {
+  min-height:100vh;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  text-align:center;
+  padding:120px 24px 80px;
+  position:relative; z-index:1;
+}
+.hero-eyebrow {
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:.2em;
+  color:var(--accent);
+  text-transform:uppercase;
+  margin-bottom:24px;
+  opacity:0;
+  animation:fadeUp .8s .1s ease forwards;
+}
+.hero h1 {
+  font-family:'DM Serif Display', serif;
+  font-size:clamp(52px, 10vw, 96px);
+  line-height:1.05;
+  color:var(--text);
+  opacity:0;
+  animation:fadeUp .9s .25s ease forwards;
+}
+.hero-sub {
+  margin-top:20px;
+  font-size:clamp(15px, 2vw, 18px);
+  color:var(--text2);
+  font-weight:300;
+  letter-spacing:.04em;
+  opacity:0;
+  animation:fadeUp .9s .4s ease forwards;
+}
+.hero-tags {
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+  margin-top:40px;
+  opacity:0;
+  animation:fadeUp .9s .55s ease forwards;
+}
+.tag {
+  font-size:13px;
+  padding:7px 18px;
+  border-radius:99px;
+  background:var(--surface);
+  border:.5px solid var(--border);
+  color:var(--text2);
+  font-weight:400;
+}
+.scroll-hint {
+  position:absolute; bottom:40px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  opacity:0; animation:fadeUp .8s 1s ease forwards;
+}
+.scroll-hint span { font-size:11px; color:var(--text3); letter-spacing:.1em; }
+.scroll-line {
+  width:1px; height:48px;
+  background:linear-gradient(to bottom, var(--accent), transparent);
+  animation:scrollPulse 1.8s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100%{ opacity:.3; transform:scaleY(.8); }
+  50%{ opacity:1; transform:scaleY(1); }
+}
+
+/* ── 大標語 ── */
+.statement {
+  max-width:900px; margin:0 auto;
+  padding:80px 24px;
+  text-align:center;
+  position:relative; z-index:1;
+}
+.statement p {
+  font-family:'DM Serif Display', serif;
+  font-size:clamp(28px, 4.5vw, 48px);
+  line-height:1.35;
+  color:var(--text);
+}
+.statement em {
+  font-style:normal;
+  color:var(--accent);
+}
+
+/* ── Section 共用 ── */
+.section {
+  max-width:1080px; margin:0 auto;
+  padding:80px 24px;
+  position:relative; z-index:1;
+}
+.section-label {
+  font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:12px;
+}
+.section-title {
+  font-family:'DM Serif Display', serif;
+  font-size:clamp(28px, 4vw, 44px);
+  color:var(--text);
+  margin-bottom:48px;
+}
+
+/* ── 關於我 ── */
+.about-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:48px;
+  align-items:start;
+}
+.about-text p {
+  font-size:15px; line-height:1.9;
+  color:var(--text2);
+  margin-bottom:20px;
+}
+.timeline { display:flex; flex-direction:column; gap:0; }
+.tl-item {
+  display:flex; gap:20px;
+  padding-bottom:32px;
+  position:relative;
+}
+.tl-item:not(:last-child)::after {
+  content:'';
+  position:absolute;
+  left:11px; top:24px;
+  width:1px; bottom:0;
+  background:var(--border);
+}
+.tl-dot {
+  width:24px; height:24px; flex-shrink:0;
+  border-radius:50%;
+  background:var(--accent-lt);
+  border:2px solid var(--accent);
+  margin-top:2px;
+  display:flex; align-items:center; justify-content:center;
+}
+.tl-dot-inner {
+  width:8px; height:8px;
+  border-radius:50%;
+  background:var(--accent);
+}
+.tl-year { font-size:12px; color:var(--accent); font-weight:500; margin-bottom:4px; }
+.tl-title { font-size:15px; font-weight:500; color:var(--text); }
+.tl-desc { font-size:13px; color:var(--text3); margin-top:4px; line-height:1.6; }
+
+/* ── 技能卡 ── */
+.skills-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:16px;
+  margin-top:16px;
+}
+.skill-card {
+  background:var(--surface);
+  border:.5px solid var(--border);
+  border-radius:16px;
+  padding:22px 24px;
+  transition:transform .25s, border-color .25s, box-shadow .25s;
+  cursor:default;
+}
+.skill-card:hover {
+  transform:translateY(-5px);
+  border-color:var(--accent);
+  box-shadow:0 12px 36px rgba(58,110,168,0.12);
+}
+.skill-icon { font-size:22px; margin-bottom:12px; }
+.skill-name { font-size:14px; font-weight:500; color:var(--text); }
+.skill-desc { font-size:12px; color:var(--text3); margin-top:4px; line-height:1.5; }
+
+/* ── 分隔帶 ── */
+.divider-band {
+  position:relative; z-index:1;
+  background:var(--surface);
+  border-top:.5px solid var(--border);
+  border-bottom:.5px solid var(--border);
+  padding:64px 24px;
+  overflow:hidden;
+}
+.divider-band::before {
+  content:'';
+  position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(
+      -55deg,
+      transparent,
+      transparent 40px,
+      var(--hero-line) 40px,
+      var(--hero-line) 41px
+    );
+}
+.divider-inner {
+  position:relative;
+  max-width:900px; margin:0 auto;
+  text-align:center;
+}
+.divider-inner p {
+  font-family:'DM Serif Display', serif;
+  font-size:clamp(22px, 3.5vw, 38px);
+  color:var(--text);
+  line-height:1.4;
+}
+
+/* ── 計畫 ── */
+.plan-grid {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:20px;
+}
+.plan-card {
+  background:var(--surface);
+  border:.5px solid var(--border);
+  border-radius:20px;
+  padding:32px 28px;
+  position:relative;
+  overflow:hidden;
+  transition:transform .25s, box-shadow .25s;
+}
+.plan-card:hover {
+  transform:translateY(-6px);
+  box-shadow:0 20px 48px rgba(58,110,168,0.1);
+}
+.plan-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0;
+  height:3px;
+  background:linear-gradient(90deg, var(--accent), var(--accent2));
+  opacity:0;
+  transition:opacity .25s;
+}
+.plan-card:hover::before { opacity:1; }
+.plan-num {
+  font-size:11px; font-weight:500;
+  letter-spacing:.15em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:16px;
+}
+.plan-title {
+  font-family:'DM Serif Display', serif;
+  font-size:22px; color:var(--text);
+  margin-bottom:12px;
+}
+.plan-items { list-style:none; }
+.plan-items li {
+  font-size:14px; color:var(--text2);
+  padding:6px 0;
+  border-bottom:.5px solid var(--border);
+  display:flex; align-items:center; gap:8px;
+}
+.plan-items li:last-child { border-bottom:none; }
+.plan-items li::before {
+  content:'';
+  width:5px; height:5px; border-radius:50%;
+  background:var(--accent); flex-shrink:0;
+}
+
+/* ── 作品 ── */
+.project-featured {
+  background:var(--surface);
+  border:.5px solid var(--border);
+  border-radius:24px;
+  overflow:hidden;
+  margin-bottom:24px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  transition:box-shadow .3s;
+}
+.project-featured:hover {
+  box-shadow:0 24px 60px rgba(58,110,168,0.12);
+}
+.project-img-wrap {
+  position:relative;
+  overflow:hidden;
+  background:var(--bg2);
+  min-height:280px;
+  display:flex; align-items:center; justify-content:center;
+}
+.project-img-wrap img {
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .6s ease;
+}
+.project-featured:hover .project-img-wrap img { transform:scale(1.06); }
+.project-img-placeholder {
+  font-size:64px; opacity:.3;
+}
+.project-info {
+  padding:40px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.project-badge {
+  display:inline-block;
+  font-size:11px; font-weight:500;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent);
+  background:var(--accent-lt);
+  padding:4px 12px;
+  border-radius:99px;
+  margin-bottom:16px;
+  width:fit-content;
+}
+.project-title {
+  font-family:'DM Serif Display', serif;
+  font-size:28px; color:var(--text);
+  margin-bottom:12px; line-height:1.2;
+}
+.project-desc {
+  font-size:14px; color:var(--text2);
+  line-height:1.8; margin-bottom:20px;
+}
+.project-techs {
+  display:flex; flex-wrap:wrap; gap:8px;
+}
+.tech-pill {
+  font-size:12px; padding:4px 12px;
+  border-radius:99px;
+  background:var(--surface2);
+  border:.5px solid var(--border);
+  color:var(--text3);
+}
+.mini-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.mini-card {
+  background:var(--surface);
+  border:.5px solid var(--border);
+  border-radius:18px;
+  padding:28px 24px;
+  transition:transform .25s, border-color .25s;
+}
+.mini-card:hover {
+  transform:translateY(-5px);
+  border-color:var(--accent);
+}
+.mini-card h3 {
+  font-size:16px; font-weight:500;
+  color:var(--text); margin-bottom:8px;
+}
+.mini-card p { font-size:13px; color:var(--text3); line-height:1.6; }
+
+/* ── 聯絡 ── */
+.contact-wrap {
+  background:var(--surface);
+  border:.5px solid var(--border);
+  border-radius:24px;
+  padding:60px;
+  text-align:center;
+  position:relative; overflow:hidden;
+}
+.contact-wrap::before {
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(58,110,168,0.07) 0%, transparent 60%);
+  pointer-events:none;
+}
+.contact-title {
+  font-family:'DM Serif Display', serif;
+  font-size:36px; color:var(--text);
+  margin-bottom:12px; position:relative;
+}
+.contact-sub {
+  font-size:15px; color:var(--text2);
+  margin-bottom:36px; position:relative;
+}
+.contact-links {
+  display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+  position:relative;
+}
+.contact-link {
+  display:flex; align-items:center; gap:10px;
+  text-decoration:none;
+  font-size:14px; font-weight:500;
+  padding:12px 28px;
+  border-radius:12px;
+  transition:transform .2s, box-shadow .2s;
+}
+.contact-link.primary {
+  background:var(--accent);
+  color:#fff;
+}
+.contact-link.primary:hover {
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(58,110,168,0.35);
+}
+.contact-link.secondary {
+  background:var(--surface2);
+  border:.5px solid var(--border);
+  color:var(--text);
+}
+.contact-link.secondary:hover {
+  transform:translateY(-2px);
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+/* ── Footer ── */
+footer {
+  text-align:center;
+  padding:40px 24px;
+  font-size:13px;
+  color:var(--text3);
+  border-top:.5px solid var(--border);
+  position:relative; z-index:1;
+}
+
+/* ── Fade-in ── */
+.fade { opacity:0; transform:translateY(36px); transition:opacity .8s ease, transform .8s ease; }
+.fade.show { opacity:1; transform:translateY(0); }
+.fade-delay-1 { transition-delay:.1s; }
+.fade-delay-2 { transition-delay:.2s; }
+.fade-delay-3 { transition-delay:.3s; }
+
+/* ── Keyframes ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── RWD ── */
+@media (max-width:900px) {
+  .about-grid { grid-template-columns:1fr; gap:40px; }
+  .project-featured { grid-template-columns:1fr; }
+  .project-img-wrap { min-height:220px; }
+  .plan-grid { grid-template-columns:1fr; }
+  .mini-grid { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:600px) {
+  nav { padding:14px 20px; }
+  .nav-links a { padding:5px 10px; font-size:13px; }
+  .contact-wrap { padding:36px 24px; }
+  .project-info { padding:28px 24px; }
+  .mini-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <div class="nav-logo">翁子云</div>
+  <div class="nav-links">
+    <a href="#about">關於</a>
+    <a href="#plan">計畫</a>
+    <a href="#projects">作品</a>
+    <a href="#contact">聯絡</a>
+    <button class="toggle-btn" onclick="toggleDark()" id="themeBtn" title="切換主題">🌙</button>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-eyebrow">資訊工程學習者</div>
+  <h1>翁子云</h1>
+  <p class="hero-sub">熱愛科技與創造，把想法變成可以運作的東西</p>
+  <div class="hero-tags">
+    <span class="tag">C++ &amp; Arduino</span>
+    <span class="tag">自走車開發</span>
+    <span class="tag">國科會競賽 第三名</span>
+    <span class="tag">Python</span>
+  </div>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ── Statement ── -->
+<div class="statement fade">
+  <p>從零開始，<em>把想法變成</em><br>會動的機器</p>
+</div>
+
+<!-- ── 關於我 ── -->
+<section id="about" class="section">
+  <div class="section-label">About</div>
+  <div class="section-title">關於我</div>
+
+  <div class="about-grid">
+    <div class="about-text fade">
+      <p>在高中階段，我因參與台科大程式營隊，開始接觸程式設計並產生濃厚興趣。從基礎語法到邏輯思維，一步步建立起對工程的熱情。</p>
+      <p>高二參與國科會競賽，使用 Arduino 獨立開發專題，最終獲得全國第三名。這段經歷讓我深刻體會到從想法到實作的過程。</p>
+      <p>高三透過自主學習，以 C++ 製作自走車並成功讓車體自動運作。未來希望繼續鑽研資訊工程，投入科技產業。</p>
+    </div>
+
+    <div class="timeline fade fade-delay-1">
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div>
+          <div class="tl-year">高一</div>
+          <div class="tl-title">台科大程式營隊</div>
+          <div class="tl-desc">初次接觸程式設計，建立邏輯思維與基礎語法能力</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div>
+          <div class="tl-year">高二</div>
+          <div class="tl-title">國科會競賽 全國第三名</div>
+          <div class="tl-desc">使用 Arduino 開發競賽專題，從設計到實作獨立完成</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div>
+          <div class="tl-year">高三</div>
+          <div class="tl-title">C++ 自走車專案</div>
+          <div class="tl-desc">透過自主學習，成功讓車體自動運作，深化 C++ 實作能力</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skills-grid" style="margin-top:48px;">
+    <div class="skill-card fade fade-delay-1">
+      <div class="skill-icon">⚙️</div>
+      <div class="skill-name">C++ / Arduino</div>
+      <div class="skill-desc">嵌入式系統開發、硬體控制邏輯</div>
+    </div>
+    <div class="skill-card fade fade-delay-2">
+      <div class="skill-icon">🐍</div>
+      <div class="skill-name">Python</div>
+      <div class="skill-desc">持續自學中，資料處理與腳本自動化</div>
+    </div>
+    <div class="skill-card fade fade-delay-3">
+      <div class="skill-icon">🔩</div>
+      <div class="skill-name">硬體整合</div>
+      <div class="skill-desc">感測器、馬達控制、電路設計基礎</div>
+    </div>
+    <div class="skill-card fade fade-delay-1">
+      <div class="skill-icon">🧩</div>
+      <div class="skill-name">問題解決</div>
+      <div class="skill-desc">系統性排查、測試驅動的開發思維</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 分隔帶 ── -->
+<div class="divider-band fade">
+  <div class="divider-inner">
+    <p>「用程式寫下思考，<br>讓機器理解意圖。」</p>
+  </div>
+</div>
+
+<!-- ── 學習計畫 ── -->
+<section id="plan" class="section">
+  <div class="section-label">Roadmap</div>
+  <div class="section-title">學習計畫</div>
+
+  <div class="plan-grid">
+    <div class="plan-card fade">
+      <div class="plan-num">01 — 近程</div>
+      <div class="plan-title">打好基礎</div>
+      <ul class="plan-items">
+        <li>學測備考衝刺</li>
+        <li>多益英語考試</li>
+        <li>持續精進 Python</li>
+      </ul>
+    </div>
+    <div class="plan-card fade fade-delay-1">
+      <div class="plan-num">02 — 中程</div>
+      <div class="plan-title">累積實力</div>
+      <ul class="plan-items">
+        <li>大學資工專業課程</li>
+        <li>取得相關技術證照</li>
+        <li>找尋實習機會</li>
+      </ul>
+    </div>
+    <div class="plan-card fade fade-delay-2">
+      <div class="plan-num">03 — 遠程</div>
+      <div class="plan-title">投入產業</div>
+      <ul class="plan-items">
+        <li>報考資工研究所</li>
+        <li>進入科技業工作</li>
+        <li>參與開源或研究專案</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── 作品 ── -->
+<section id="projects" class="section">
+  <div class="section-label">Projects</div>
+  <div class="section-title">作品與成就</div>
+
+  <!-- 主要作品 -->
+  <div class="project-featured fade">
+    <div class="project-img-wrap">
+      <img src="car.png" alt="自走車專案照片"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="project-img-placeholder" style="display:none;">🚗</div>
+    </div>
+    <div class="project-info">
+      <span class="project-badge">Featured Project</span>
+      <h2 class="project-title">C++ 自走車專案</h2>
+      <p class="project-desc">高三自主學習成果。從電路設計到程式邏輯，獨立完成整台自走車的開發。透過反覆測試與修正，成功讓車體自動運作並穩定行駛。</p>
+      <div class="project-techs">
+        <span class="tech-pill">C++</span>
+        <span class="tech-pill">Arduino</span>
+        <span class="tech-pill">感測器整合</span>
+        <span class="tech-pill">PID 控制</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 其他作品 -->
+  <div class="mini-grid">
+    <div class="mini-card fade">
+      <h3>🏆 國科會競賽</h3>
+      <p>Arduino 專題開發，全國第三名。獨立設計並實作完整系統。</p>
+    </div>
+    <div class="mini-card fade fade-delay-1">
+      <h3>💻 程式營隊</h3>
+      <p>台科大程式設計營隊，建立程式基礎與工程邏輯思維。</p>
+    </div>
+    <div class="mini-card fade fade-delay-2">
+      <h3>📚 自主學習</h3>
+      <p>持續深化 Python 與 C++，目標投入演算法與系統程式設計。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 聯絡 ── -->
+<section id="contact" class="section">
+  <div class="contact-wrap fade">
+    <h2 class="contact-title">一起來合作吧</h2>
+    <p class="contact-sub">對技術充滿熱情，歡迎交流、合作或給予建議</p>
+    <div class="contact-links">
+      <a href="mailto:your@email.com" class="contact-link primary">✉️ 寄信給我</a>
+      <a href="https://github.com/" target="_blank" class="contact-link secondary">🐱 GitHub</a>
+      <a href="https://linkedin.com/" target="_blank" class="contact-link secondary">💼 LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>© 2026 翁子云 · 用熱情打造每一行程式碼</p>
+</footer>
+
+<script>
+/* ── Fade on scroll (含首屏) ── */
+function checkFade() {
+  document.querySelectorAll('.fade').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight - 80) {
+      el.classList.add('show');
+    }
+  });
+}
+window.addEventListener('scroll', checkFade, { passive: true });
+checkFade();
+
+/* ── Nav active 狀態 ── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 200) cur = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+  });
+}, { passive: true });
+
+/* ── 深色模式 ── */
+let dark = false;
+function toggleDark() {
+  dark = !dark;
+  document.body.classList.toggle('dark', dark);
+  document.getElementById('themeBtn').textContent = dark ? '☀️' : '🌙';
+}
+</script>
+</body>
+</html>
